@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="SpringSample" basedir="." default="all">
+
+	<property file="./build.properties" /> <!-- こちらの定義が強いよ -->
+	
+	<property name="dest.dir" location="${base.dest.dir}/classes" />
+	<property name="test.dest.dir" location="${base.dest.dir}/test-classes" />
+	<property name="war.file" location="${base.dest.dir}/${target.file}.war" />
+	
+	<property name="cobertura.dest.dir" location="${base.dest.dir}/cobertura" />
+	<property name="cobertura.inst.dir" location="${cobertura.dest.dir}/instrumented" />
+	<property name="cobertura.report.dir" location="${cobertura.dest.dir}/report" />
+	<property name="cobertura.ser.dir" location="${cobertura.dest.dir}/ser" />
+
+	<property name="cobertura.ser" value="cobertura.ser" />
+	<property name="webcobertura.ser" value="webcobertura.ser" />
+	<property name="mergecobertura.ser" value="mergecobertura.ser" />
+
+	<property name="junit.dest.dir" location="${base.dest.dir}/junit" />
+	<property name="junit.result.dir" location="${junit.dest.dir}/result" />
+	<property name="junit.report.dir" location="${junit.dest.dir}/report" />
+	
+	<property name="selenium.dest.dir" location="${base.dest.dir}/selenium" />
+	<property name="selenium.result.dir" location="${selenium.dest.dir}/result" />
+	<property name="selenium.report.dir" location="${selenium.dest.dir}/report" />
+	
+	<property name="ssh.key" location="${user.home}/${ssh.privateKey}" />
+
+	<property name="hibernate-validator.dir" location="${base.lib.dir}/Hibernate-validator" />
+	<property name="JavaStandardTagLibrary.dir" location="${base.lib.dir}/JavaStandardTagLibrary" />
+	<property name="Logging.dir" location="${base.lib.dir}/Logging" />
+	<property name="SpringFramework.dir" location="${base.lib.dir}/SpringFramework" />
+	<property name="Validator-api.dir" location="${base.lib.dir}/Validator-api" />
+	<property name="Cobertura.dir" location="${base.lib.dir}/Cobertura" />	
+	<property name="JUnit.dir" location="${base.lib.dir}/JUnit" />
+	<property name="Selenium.dir" location="${base.lib.dir}/Selenium" />
+	
+	<!-- クラスパス定義 -->
+	<!-- for compile, test, war -->
+	<path id="libraries">
+		<fileset dir="${hibernate-validator.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${JavaStandardTagLibrary.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${Logging.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${SpringFramework.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${Validator-api.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	<!-- for cobertura -->
+	<path id="cobertura.lib">
+		<fileset dir="${Cobertura.dir}">
+			<include name="cobertura*.jar" />
+			<include name="lib/*.jar" />
+		</fileset>
+	</path>
+	<!-- for JUnit -->
+	<path id="junit.lib">
+		<fileset dir="${JUnit.dir}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	<!-- for Selenium -->
+	<path id="selenium.lib">
+		<fileset dir="${Selenium.dir}">
+			<include name="*.jar" />
+			<include name="libs/*.jar" />
+		</fileset>
+	</path>
+	
+	<!-- デフォルトターゲット -->
+	<target name="all">
+		<antcall target="prepare" />
+		<antcall target="compile" />
+		<antcall target="checkstyle"/>
+		<antcall target="findbugs" />
+		<antcall target="cobertura.prepare" />
+		<antcall target="junit" />
+		<antcall target="webapp.war" />
+		<antcall target="webapp.shutdown" />
+		<antcall target="webapp.deploy" />
+		<antcall target="webapp.startup" />
+		<!--
+		<antcall target="webapp.selenium" />
+		<antcall target="webapp.shutdown" />
+		<antcall target="webapp.get.webcobertura" />
+		<antcall target="cobertura.merge" />
+		<antcall target="cobertura.report" />
+		-->
+	</target>
+	
+	<!-- 準備 -->
+	<target name="prepare">
+		<delete dir="${base.dest.dir}" />
+	</target>
+	
+	<!-- コンパイル -->
+	<target name="compile">
+		<delete dir="${dest.dir}"/>
+		<mkdir dir="${dest.dir}"/>
+		<javac srcdir="${src.dir}" destdir="${dest.dir}" encoding="${src.encoding}" debug="true" includeAntRuntime="false">
+			<classpath refid="libraries" />
+		</javac>
+		<copy todir="${dest.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.properties" />
+				<exclude name="**/*.java" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<!-- checkstyle -->
+	<target name="checkstyle">
+	</target>
+	
+	<!-- findbugs -->
+	<target name="findbugs">
+	</target>
+	
+	<!-- cobertura -->
+	<taskdef classpathref="cobertura.lib" resource="tasks.properties" />
+	
+	<!-- カバレッジ取得準備 -->
+	<target name="cobertura.prepare">
+		<delete dir="${cobertura.dest.dir}" />
+		<mkdir dir="${cobertura.inst.dir}" />
+		<mkdir dir="${cobertura.ser.dir}" />
+		<cobertura-instrument todir="${cobertura.inst.dir}" datafile="${cobertura.ser.dir}/${cobertura.ser}">
+			<fileset dir="${dest.dir}">
+				<include name="**/*.class" />
+			</fileset>
+		</cobertura-instrument>
+		<copy todir="${dest.dir}" overwrite="true">
+			<fileset dir="${cobertura.inst.dir}">
+				<include name="**/*.class" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<!-- カバレッジ結果ファイルマージ -->
+	<target name="cobertura.merge">
+		<delete file="${cobertura.ser.dir}/${mergecobertura.ser}" />
+		<cobertura-merge datafile="${cobertura.ser.dir}/${mergecobertura.ser}">
+			<fileset dir="${cobertura.ser.dir}">
+				<include name="${cobertura.ser}" />
+				<include name="${webcobertura.ser}" />
+			</fileset>
+		</cobertura-merge>
+	</target>
+	
+	<!-- カバレッジレポート作成 -->
+	<target name="cobertura.report">
+		<delete dir="${cobertura.report.dir}" />
+		<mkdir dir="${cobertura.report.dir}" />
+		<cobertura-report format="html" destdir="${cobertura.report.dir}" datafile="${cobertura.ser.dir}/${mergecobertura.ser}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.java" />
+			</fileset>
+		</cobertura-report>
+	</target>
+	
+	<!-- junit -->
+	<target name="junit">
+		<delete dir="${test.dest.dir}" />
+		<mkdir dir="${test.dest.dir}" />
+		<javac srcdir="${test.src.dir}" destdir="${test.dest.dir}" encoding="${src.encoding}" includeAntRuntime="false">
+			<classpath location="${dest.dir}" />
+			<classpath refid="libraries" />
+			<classpath refid="junit.lib" />
+			<classpath refid="selenium.lib" />
+		</javac>
+		<delete dir="${junit.dest.dir}" />
+		<mkdir dir="${junit.result.dir}" />
+		<junit fork="yes" haltonfailure="on">
+			<jvmarg value="-Dfile.encoding=UTF-8"/>
+			<jvmarg value="-Dnet.sourceforge.cobertura.datafile=${cobertura.ser.dir}/${cobertura.ser}"/>
+			<jvmarg value="-XX:-UseSplitVerifier"/>
+			<classpath location="${dest.dir}" />
+			<classpath location="${test.dest.dir}" />
+			<classpath refid="libraries" />
+			<classpath refid="cobertura.lib" />
+			<classpath refid="junit.lib" />
+			<formatter type="xml" />
+			<batchtest todir="${junit.result.dir}">
+				<fileset dir="${test.src.dir}">
+					<include name="**/*Test.java" />
+					<exclude name="**/*SeleniumTest.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+	
+	<!-- junitレポート-->
+	<target name="junit.report">
+		<delete dir="${junit.report.dir}" />
+		<mkdir dir="${junit.report.dir}" />
+		<junitreport todir="${junit.report.dir}">
+			<fileset dir="${junit.result.dir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${junit.report.dir}" />
+		</junitreport>
+	</target>
+	
+	<!-- selenium -->
+	<target name="webapp.selenium">
+		<delete dir="${selenium.result.dir}" />
+		<mkdir dir="${selenium.result.dir}" />
+		<junit fork="yes" haltonfailure="on">
+			<classpath location="${test.dest.dir}" />
+			<classpath refid="libraries" />
+			<classpath refid="cobertura.lib" />
+			<classpath refid="junit.lib" />
+			<classpath refid="selenium.lib" />
+			<formatter type="xml" />
+			<batchtest todir="${selenium.result.dir}">
+				<fileset dir="${test.src.dir}">
+					<exclude name="**/*Test.java" />
+					<include name="**/*SeleniumTest.java" />
+					<include name="test/selenium/**" />
+				</fileset>
+			</batchtest>
+		</junit>
+	</target>
+	
+	<!-- WARファイル作成 -->
+	<target name="webapp.war">
+		<war destfile="${war.file}" webxml="${webcontent.dir}/WEB-INF/web.xml">
+			<fileset dir="${webcontent.dir}">
+				<exclude name="WEB-INF/web.xml"/>
+				<exclude name="WEB-INF/lib"/>
+			</fileset>
+			<classes dir="${dest.dir}" />
+			<lib dir="${hibernate-validator.dir}">
+				<include name="*.jar" />
+			</lib>
+			<lib dir="${JavaStandardTagLibrary.dir}">
+				<include name="*.jar" />
+			</lib>
+			<lib dir="${Logging.dir}">
+				<include name="*.jar" />
+			</lib>
+			<lib dir="${SpringFramework.dir}">
+				<include name="*.jar" />
+			</lib>
+			<lib dir="${Validator-api.dir}">
+				<include name="*.jar" />
+			</lib>
+			<lib dir="${Cobertura.dir}">
+				<include name="cobertura*.jar" />
+				<include name="lib/*.jar" />
+			</lib>
+		</war>
+	</target>
+	
+	<!-- start webapp -->
+	<target name="webapp.startup">
+		<sshexec host="${ssh.remoteHost}" username="${ssh.user}" keyfile="${ssh.key}" passphrase="${ssh.pass}" failonerror="false" 
+			command="
+				cd /usr/local/bin/tomcat/bin;
+				./startup.sh;
+			"/>
+	</target>	
+
+	<!-- shutdown webapp -->
+	<target name="webapp.shutdown">
+		<sshexec host="${ssh.remoteHost}" username="${ssh.user}" keyfile="${ssh.key}" passphrase="${ssh.pass}" failonerror="false" 
+			command="
+				cd /usr/local/bin/tomcat/bin;
+				./shutdown.sh;
+			"/>
+	</target>	
+	
+	<!-- deploy -->
+	<target name="webapp.deploy">
+		<!-- scp warfile -->
+		<echo level="info" message="scp ${war.file}" />
+		<scp file="${war.file}" todir="${ssh.user}@${ssh.remoteHost}:/tmp" keyfile="${ssh.key}" passphrase="${ssh.pass}" />
+		<!-- restart tomcat -->
+		<sshexec host="${ssh.remoteHost}" username="${ssh.user}" keyfile="${ssh.key}" passphrase="${ssh.pass}" failonerror="false" 
+			command="
+				cd /usr/local/bin/tomcat/bin;
+				rm -rf ../logs/*;
+				rm -rf ../webapps/SpringSample;
+				mv -f /tmp/SpringSample.war ../webapps;
+			"/>
+	</target>
+	
+	<!-- get webcobertura.ser -->
+	<target name="webapp.get.webcobertura">
+		<echo level="info" message="scp ${ssh.user}@${ssh.remoteHost}:/tmp/${webcobertura.ser} ." />
+		<scp file="${ssh.user}@${ssh.remoteHost}:/tmp/${webcobertura.ser}" keyfile="${ssh.key}" passphrase="${ssh.pass}" todir="${cobertura.ser.dir}" failonerror="false" />
+	</target>
+	
+	<!-- -->
+	<target name="info">
+		<echo level="info" message="debug"/>
+		<!-- プロパティ出力 -->
+		<!--<echoproperties />--> 
+		<echoproperties>
+			<propertyset>
+				<propertyref prefix="ant." />
+			</propertyset>
+		</echoproperties>
+		<echo level="info" message="${name}" />
+	</target>
+</project>

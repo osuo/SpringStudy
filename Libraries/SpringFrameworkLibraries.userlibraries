@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<eclipse-userLibraries version="2">
+    <library name="HibernateValidator" systemlibrary="false">
+        <archive javadoc="jar:platform:/resource/Libraries/Hibernate-validator/javadoc/hibernate-validator-4.3.1.Final-javadoc.jar!/" path="/Libraries/Hibernate-validator/hibernate-validator-4.3.1.Final.jar" source="/Libraries/Hibernate-validator/src/hibernate-validator-4.3.1.Final-sources.jar"/>
+        <archive javadoc="jar:platform:/resource/Libraries/Hibernate-validator/javadoc/hibernate-validator-4.3.1.Final-javadoc.jar!/" path="/Libraries/Hibernate-validator/hibernate-validator-annotation-processor-4.3.1.Final.jar" source="/Libraries/Hibernate-validator/src/hibernate-validator-annotation-processor-4.3.1.Final-sources.jar"/>
+        <archive javadoc="jar:platform:/resource/Libraries/Validator-api/javadoc/validation-api-1.0.0.GA-javadoc.jar!/" path="/Libraries/Validator-api/validation-api-1.0.0.GA.jar" source="/Libraries/Validator-api/src/validation-api-1.0.0.GA-sources.jar"/>
+    </library>
+    <library name="JavaStandardTagLIbrary" systemlibrary="false">
+        <archive path="/Libraries/JavaStandardTagLibrary/javax.servlet.jsp.jstl-1.2.1.jar"/>
+    </library>
+    <library name="Logging" systemlibrary="false">
+        <archive path="/Libraries/Logging/jcl-over-slf4j-1.7.2.jar" source="/Libraries/Logging/src/jcl-over-slf4j-1.7.2-sources.jar"/>
+        <archive path="/Libraries/Logging/logback-classic-1.0.9.jar" source="/Libraries/Logging/src/logback-classic-1.0.9-sources.jar"/>
+        <archive path="/Libraries/Logging/logback-core-1.0.9.jar" source="/Libraries/Logging/src/logback-core-1.0.9-sources.jar"/>
+        <archive path="/Libraries/Logging/slf4j-api-1.7.2.jar" source="/Libraries/Logging/src/slf4j-api-1.7.2-sources.jar"/>
+        <archive path="/Libraries/Logging/jboss-logging-3.1.0.CR2.jar"/>
+    </library>
+    <library name="SpringFramework" systemlibrary="false">
+        <archive javadoc="jar:platform:/resource/Libraries/SpringFramework/javadoc/spring-aop-3.2.1.RELEASE-javadoc.jar!/" path="/Libraries/SpringFramework/spring-aop-3.2.1.RELEASE.jar" source="/Libraries/SpringFramework/src/spring-aop-3.2.1.RELEASE-sources.jar"/>
+        <archive javadoc="jar:platform:/resource/Libraries/SpringFramework/javadoc/spring-aspects-3.2.1.RELEASE-javadoc.jar!/" path="/Libraries/SpringFramework/spring-aspects-3.2.1.RELEASE.jar" source="/Libraries/SpringFramework/src/spring-aspects-3.2.1.RELEASE-sources.jar"/>
+        <archive javadoc="jar:platform:/resource/Libraries/SpringFramework/javadoc/spring-beans-3.2.1.RELEASE-javadoc.jar!/" path="/Libraries/SpringFramework/spring-beans-3.2.1.RELEASE.jar" source="/Libraries/SpringFramework/src/spring-beans-3.2.1.RELEASE-sources.jar"/>
+        <archive path="/Libraries/SpringFramework/spring-build-src-3.2.1.RELEASE.jar"/>
+        <archive javadoc="jar:platform:/resource/Libraries/SpringFramework/javadoc/spring-context-3.2.1.RELEASE-javadoc.jar!/" path="/Libraries/SpringFramework/spring-context-3.2.1.RELEASE.jar" source="/Libraries/SpringFramework/src/spring-context-3.2.1.RELEASE-sources.jar"/>
+        <archive javadoc="jar:platform:/resource/Libraries/SpringFramework/javadoc/spring-context-support-3.2.1.RELEASE-javadoc.jar!/" path="/Libraries/SpringFramework/spring-context-support-3.2.1.RELEASE.jar" source="/Libraries/SpringFramework/src/spring-context-support-3.2.1.RELEASE-sources.jar"/>
+        <archive javadoc="jar:platform:/resource/Libraries/SpringFramework/javadoc/spring-core-3.2.1.RELEASE-javadoc.jar!/" path="/Libraries/SpringFramework/spring-core-3.2.1.RELEASE.jar" source="/Libraries/SpringFramework/src/spring-core-3.2.1.RELEASE-sources.jar"/>
+        <archive javadoc="jar:platform:/resource/Libraries/SpringFramework/javadoc/spring-expression-3.2.1.RELEASE-javadoc.jar!/" path="/Libraries/SpringFramework/spring-expression-3.2.1.RELEASE.jar" source="/Libraries/SpringFramework/src/spring-expression-3.2.1.RELEASE-sources.jar"/>
+        <archive path="/Libraries/SpringFramework/spring-instrument-3.2.1.RELEASE.jar"/>
+        <archive path="/Libraries/SpringFramework/spring-instrument-tomcat-3.2.1.RELEASE.jar"/>
+        <archive path="/Libraries/SpringFramework/spring-jdbc-3.2.1.RELEASE.jar"/>
+        <archive path="/Libraries/SpringFramework/spring-jms-3.2.1.RELEASE.jar"/>
+        <archive path="/Libraries/SpringFramework/spring-orm-3.2.1.RELEASE.jar"/>
+        <archive path="/Libraries/SpringFramework/spring-oxm-3.2.1.RELEASE.jar"/>
+        <archive path="/Libraries/SpringFramework/spring-struts-3.2.1.RELEASE.jar"/>
+        <archive path="/Libraries/SpringFramework/spring-test-3.2.1.RELEASE.jar"/>
+        <archive path="/Libraries/SpringFramework/spring-tx-3.2.1.RELEASE.jar"/>
+        <archive path="/Libraries/SpringFramework/spring-web-3.2.1.RELEASE.jar"/>
+        <archive path="/Libraries/SpringFramework/spring-webmvc-3.2.1.RELEASE.jar"/>
+        <archive path="/Libraries/SpringFramework/spring-webmvc-portlet-3.2.1.RELEASE.jar"/>
+    </library>
+</eclipse-userLibraries>
